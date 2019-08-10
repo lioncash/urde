@@ -280,14 +280,14 @@ struct SpecMP1 : SpecBase {
 
     /* Assemble extract report */
     rep.childOpts.reserve(m_orderedPaks.size());
-    for (const std::pair<std::string, DNAMP1::PAKBridge*>& item : m_orderedPaks) {
-      if (!item.second->m_doExtract)
+    for (const auto& [name, pak] : m_orderedPaks) {
+      if (!pak->m_doExtract)
         continue;
       rep.childOpts.emplace_back();
       ExtractReport& childRep = rep.childOpts.back();
-      hecl::SystemStringConv nameView(item.first);
+      hecl::SystemStringConv nameView(name);
       childRep.name = nameView.sys_str();
-      childRep.desc = item.second->getLevelString();
+      childRep.desc = pak->getLevelString();
     }
   }
 

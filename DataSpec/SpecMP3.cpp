@@ -210,25 +210,25 @@ struct SpecMP3 : SpecBase {
     }
 
     /* Assemble extract report */
-    for (const std::pair<std::string, DNAMP3::PAKBridge*>& item : fe ? m_feOrderedPaks : m_orderedPaks) {
-      if (!item.second->m_doExtract)
+    for (const auto& [name, pak] : fe ? m_feOrderedPaks : m_orderedPaks) {
+      if (!pak->m_doExtract)
         continue;
       rep.childOpts.emplace_back();
       ExtractReport& childRep = rep.childOpts.back();
-      hecl::SystemStringConv nameView(item.first);
+      hecl::SystemStringConv nameView(name);
       childRep.name = hecl::SystemString(nameView.sys_str());
-      if (!item.first.compare("Worlds.pak"))
+      if (!name.compare("Worlds.pak"))
         continue;
-      else if (!item.first.compare("Metroid6.pak")) {
+      else if (!name.compare("Metroid6.pak")) {
         /* Phaaze doesn't have a world name D: */
         childRep.desc = _SYS_STR("Phaaze");
         continue;
-      } else if (!item.first.compare("Metroid8.pak")) {
+      } else if (!name.compare("Metroid8.pak")) {
         /* Space world is misnamed */
         childRep.desc = _SYS_STR("Space");
         continue;
       }
-      childRep.desc = item.second->getLevelString();
+      childRep.desc = pak->getLevelString();
     }
   }
 

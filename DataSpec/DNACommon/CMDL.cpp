@@ -140,15 +140,14 @@ public:
       atUint32 addedVerts = 0;
       atUint32 nextVert = 1;
       while (nextVert < m_nextOverPos) {
-        for (const std::pair<atUint16, std::vector<std::pair<atInt16, atUint16>>>& ev : m_extraVerts) {
-          for (const std::pair<atInt16, atUint16>& se : ev.second) {
-            if (se.second == nextVert) {
-              os.format(fmt(
-                  "bm.verts.ensure_lookup_table()\n"
-                  "orig_vert = bm.verts[{}]\n"
-                  "vert = bm.verts.new(orig_vert.co)\n"),
-                  ev.first + baseVert);
-              rp.first->weightVertex(os, *rp.second, se.first);
+        for (const auto& [pos, verts] : m_extraVerts) {
+          for (const auto& [se, vert] : verts) {
+            if (vert == nextVert) {
+              os.format(fmt("bm.verts.ensure_lookup_table()\n"
+                            "orig_vert = bm.verts[{}]\n"
+                            "vert = bm.verts.new(orig_vert.co)\n"),
+                        pos + baseVert);
+              rp.first->weightVertex(os, *rp.second, se);
               ++nextVert;
               ++addedVerts;
             }

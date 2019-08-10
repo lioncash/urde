@@ -31,18 +31,20 @@ void STRG::_read(athena::io::IStreamReader& reader) {
 
   langs.clear();
   langs.reserve(langCount);
-  for (FourCC& lang : readLangs) {
-    std::vector<std::u16string> strs;
+  for (const FourCC& lang : readLangs) {
     reader.seek(strCount * 4);
+
+    std::vector<std::u16string> strs;
+    strs.reserve(strCount);
     for (atUint32 s = 0; s < strCount; ++s)
       strs.emplace_back(reader.readU16StringBig());
-    langs.emplace_back(lang, strs);
+    langs.emplace_back(lang, std::move(strs));
   }
 
   langMap.clear();
   langMap.reserve(langCount);
-  for (std::pair<FourCC, std::vector<std::u16string>>& item : langs)
-    langMap.emplace(item.first, &item.second);
+  for (auto& [lang, strs] : langs)
+    langMap.emplace(lang, &strs);
 }
 
 template <>
@@ -67,14 +69,14 @@ void STRG::Enumerate<BigDNA::Write>(athena::io::IStreamWriter& writer) {
   writer.writeUint32Big(strCount);
 
   atUint32 offset = 0;
-  for (const std::pair<DNAFourCC, std::vector<std::u16string>>& lang : langs) {
-    lang.first.write(writer);
+  for (const auto& [lang, strs] : langs) {
+    DNAFourCC(lang).write(writer);
     writer.writeUint32Big(offset);
     offset += strCount * 4 + 4;
-    atUint32 langStrCount = lang.second.size();
+    atUint32 langStrCount = strs.size();
     atUint32 tableSz = strCount * 4;
     for (atUint32 s = 0; s < strCount; ++s) {
-      atUint32 chCount = lang.second[s].size();
+      atUint32 chCount = strs[s].size();
       if (s < langStrCount) {
         offset += chCount * 2 + 1;
         tableSz += chCount * 2 + 1;
@@ -87,20 +89,20 @@ void STRG::Enumerate<BigDNA::Write>(athena::io::IStreamWriter& writer) {
   }
 
   atUint32 nameTableSz = names.size() * 8;
-  for (const std::pair<std::string, int32_t>& name : names)
+  for (const auto& name : names)
     nameTableSz += name.first.size() + 1;
   writer.writeUint32Big(names.size());
   writer.writeUint32Big(nameTableSz);
   offset = names.size() * 8;
-  for (const std::pair<std::string, int32_t>& name : names) {
+  for (const auto& [name, index] : names) {
     writer.writeUint32Big(offset);
-    writer.writeInt32Big(name.second);
-    offset += name.first.size() + 1;
+    writer.writeInt32Big(index);
+    offset += name.size() + 1;
   }
-  for (const std::pair<std::string, int32_t>& name : names)
+  for (const auto& name : names)
     writer.writeString(name.first);
 
-  for (const std::pair<DNAFourCC, std::vector<std::u16string>>& lang : langs) {
+  for (const auto& lang : langs) {
     offset = strCount * 4;
     atUint32 langStrCount = lang.second.size();
     for (atUint32 s = 0; s < strCount; ++s) {
@@ -128,11 +130,11 @@ void STRG::Enumerate<BigDNA::BinarySize>(size_t& __isz) {
 
   __isz += 8;
   __isz += names.size() * 8;
-  for (const std::pair<std::string, int32_t>& name : names)
+  for (const auto& name : names)
     __isz += name.first.size() + 1;
 
   size_t strCount = STRG::count();
-  for (const std::pair<DNAFourCC, std::vector<std::u16string>>& lang : langs) {
+  for (const auto& lang : langs) {
     atUint32 langStrCount = lang.second.size();
     __isz += strCount * 4;
 
@@ -191,8 +193,8 @@ void STRG::Enumerate<BigDNA::ReadYaml>(athena::io::YAMLDocReader& reader) {
 
   langMap.clear();
   langMap.reserve(langs.size());
-  for (std::pair<FourCC, std::vector<std::u16string>>& item : langs)
-    langMap.emplace(item.first, &item.second);
+  for (const auto& [lang, strs]  : langs)
+    langMap.emplace(lang, &strs);
 }
 
 template <>
