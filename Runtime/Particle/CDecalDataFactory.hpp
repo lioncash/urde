@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Runtime/IFactory.hpp"
 #include "Runtime/IOStreams.hpp"
 
@@ -18,11 +20,11 @@ struct SQuadDescr;
 
 class CDecalDataFactory {
   static bool CreateDPSM(CDecalDescription* desc, CInputStream& in, CSimplePool* resPool);
-  static CDecalDescription* CreateGeneratorDescription(CInputStream& in, CSimplePool* resPool);
+  static std::unique_ptr<CDecalDescription> CreateGeneratorDescription(CInputStream& in, CSimplePool* resPool);
   static void GetQuadDecalInfo(CInputStream& in, CSimplePool* resPool, hecl::FourCC clsId, SQuadDescr& quad);
 
 public:
-  static CDecalDescription* GetGeneratorDesc(CInputStream& in, CSimplePool* resPool);
+  static std::unique_ptr<CDecalDescription> GetGeneratorDesc(CInputStream& in, CSimplePool* resPool);
 };
 
 CFactoryFnReturn FDecalDataFactory(const SObjectTag& tag, CInputStream& in, const CVParamTransfer& vparms,
