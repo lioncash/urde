@@ -1,19 +1,25 @@
 #pragma once
 
-#include "RetroTypes.hpp"
-#include "CFactoryMgr.hpp"
-#include "IObj.hpp"
-#include "CToken.hpp"
-#include "IOStreams.hpp"
-#include "CDecalDescription.hpp"
+#include "Runtime/IFactory.hpp"
+#include "Runtime/IOStreams.hpp"
+
+namespace hecl {
+class FourCC;
+}
 
 namespace urde {
+class CDecalDescription;
+class CObjectReference;
 class CSimplePool;
+class CVParamTransfer;
+
+struct SObjectTag;
+struct SQuadDescr;
 
 class CDecalDataFactory {
   static bool CreateDPSM(CDecalDescription* desc, CInputStream& in, CSimplePool* resPool);
   static CDecalDescription* CreateGeneratorDescription(CInputStream& in, CSimplePool* resPool);
-  static void GetQuadDecalInfo(CInputStream& in, CSimplePool* resPool, FourCC clsId, SQuadDescr& quad);
+  static void GetQuadDecalInfo(CInputStream& in, CSimplePool* resPool, hecl::FourCC clsId, SQuadDescr& quad);
 
 public:
   static CDecalDescription* GetGeneratorDesc(CInputStream& in, CSimplePool* resPool);

@@ -1,11 +1,13 @@
 #include "CDecalDataFactory.hpp"
-#include "CGenDescription.hpp"
-#include "CSwooshDescription.hpp"
-#include "CElectricDescription.hpp"
-#include "CParticleDataFactory.hpp"
-#include "Graphics/CModel.hpp"
-#include "CSimplePool.hpp"
-#include "CRandom16.hpp"
+
+#include "Runtime/CRandom16.hpp"
+#include "Runtime/CSimplePool.hpp"
+#include "Runtime/Graphics/CModel.hpp"
+#include "Runtime/Particle/CDecalDescription.hpp"
+#include "Runtime/Particle/CGenDescription.hpp"
+#include "Runtime/Particle/CParticleDataFactory.hpp"
+
+#include <logvisor/logvisor.hpp>
 
 namespace urde {
 static logvisor::Module Log("urde::CDecalDataFactory");
@@ -92,7 +94,7 @@ bool CDecalDataFactory::CreateDPSM(CDecalDescription* desc, CInputStream& in, CS
   return true;
 }
 
-void CDecalDataFactory::GetQuadDecalInfo(CInputStream& in, CSimplePool* resPool, FourCC clsId, SQuadDescr& quad) {
+void CDecalDataFactory::GetQuadDecalInfo(CInputStream& in, CSimplePool* resPool, hecl::FourCC clsId, SQuadDescr& quad) {
   switch (clsId.toUint32()) {
   case SBIG('1LFT'):
   case SBIG('2LFT'):
