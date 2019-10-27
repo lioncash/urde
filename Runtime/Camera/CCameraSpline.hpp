@@ -35,8 +35,8 @@ public:
   CCameraSpline(CCameraSpline&&) noexcept = default;
   CCameraSpline& operator=(CCameraSpline&&) noexcept = default;
 
-  void CalculateKnots(TUniqueId, const std::vector<SConnection>&, CStateManager&);
-  void Initialize(TUniqueId, const std::vector<SConnection>&, CStateManager&);
+  void CalculateKnots(TUniqueId cameraId, const std::vector<SConnection>& connections, CStateManager& mgr);
+  void Initialize(TUniqueId cameraId, const std::vector<SConnection>& connections, CStateManager& mgr);
   void Reset(size_t size);
   void AddKnot(const zeus::CVector3f& pos, const zeus::CVector3f& dir);
   void SetKnotPosition(size_t idx, const zeus::CVector3f& pos);
