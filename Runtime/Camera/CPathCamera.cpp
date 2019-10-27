@@ -34,14 +34,17 @@ void CPathCamera::AcceptScriptMsg(EScriptObjectMessage msg, TUniqueId uid, CStat
 }
 
 void CPathCamera::Think(float dt, CStateManager& mgr) {
-  if (!GetActive())
+  if (!GetActive()) {
     return;
+  }
 
-  if (mgr.GetCameraManager()->GetPathCameraId() != GetUniqueId())
+  if (mgr.GetCameraManager()->GetPathCameraId() != GetUniqueId()) {
     return;
+  }
 
-  if (x188_spline.GetSize() <= 0)
+  if (x188_spline.IsEmpty()) {
     return;
+  }
 
   zeus::CTransform xf = GetTransform();
   zeus::CVector3f ballLook = mgr.GetCameraManager()->GetBallCamera()->GetLookPos();
