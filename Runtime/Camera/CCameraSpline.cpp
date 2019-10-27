@@ -1,10 +1,22 @@
-#include "Camera/CCameraSpline.hpp"
-#include "CStateManager.hpp"
-#include "World/CScriptCameraWaypoint.hpp"
+#include "Runtime/Camera/CCameraSpline.hpp"
+
+#include <algorithm>
+
+#include "Runtime/CStateManager.hpp"
+#include "Runtime/RetroTypes.hpp"
+#include "Runtime/World/CEntityInfo.hpp"
+#include "Runtime/World/CScriptCameraWaypoint.hpp"
+
 #include "TCastTo.hpp" // Generated file, do not modify include path
+
+#include <zeus/CQuaternion.hpp>
+#include <zeus/CTransform.hpp>
+#include <zeus/CVector3f.hpp>
 
 namespace urde {
 CCameraSpline::CCameraSpline(bool closedLoop) : x48_closedLoop(closedLoop) {}
+
+CCameraSpline::~CCameraSpline() = default;
 
 void CCameraSpline::CalculateKnots(TUniqueId cameraId, const std::vector<SConnection>& connections,
                                    CStateManager& mgr) {

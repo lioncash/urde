@@ -1,11 +1,18 @@
 #pragma once
 
-#include "World/CEntityInfo.hpp"
-#include "zeus/CVector3f.hpp"
+#include <cstddef>
+#include <vector>
+
+#include "Runtime/rstl.hpp"
+
+#include <zeus/CTransform.hpp>
+#include <zeus/CVector3f.hpp>
 
 namespace urde {
-class CStateManager;
 class CMaterialFilter;
+class CStateManager;
+struct SConnection;
+struct TUniqueId;
 
 class CCameraSpline {
   friend class CBallCamera;
@@ -20,6 +27,14 @@ class CCameraSpline {
 
 public:
   CCameraSpline(bool closedLoop);
+  ~CCameraSpline();
+
+  CCameraSpline(const CCameraSpline&) = default;
+  CCameraSpline& operator=(const CCameraSpline&) = default;
+
+  CCameraSpline(CCameraSpline&&) noexcept = default;
+  CCameraSpline& operator=(CCameraSpline&&) noexcept = default;
+
   void CalculateKnots(TUniqueId, const std::vector<SConnection>&, CStateManager&);
   void Initialize(TUniqueId, const std::vector<SConnection>&, CStateManager&);
   void Reset(size_t size);
