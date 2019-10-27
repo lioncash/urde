@@ -26,7 +26,7 @@ class CCameraSpline {
                             rstl::reserved_vector<zeus::CVector3f, 4>& directions) const;
 
 public:
-  CCameraSpline(bool closedLoop);
+  explicit CCameraSpline(bool closedLoop);
   ~CCameraSpline();
 
   CCameraSpline(const CCameraSpline&) = default;

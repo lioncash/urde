@@ -15,7 +15,7 @@ CPathCamera::CPathCamera(TUniqueId uid, std::string_view name, const CEntityInfo
                          float maxEaseDist, u32 flags, EInitialSplinePosition initPos)
 : CGameCamera(uid, active, name, info, xf, CCameraManager::ThirdPersonFOV(), CCameraManager::NearPlane(),
               CCameraManager::FarPlane(), CCameraManager::Aspect(), kInvalidUniqueId, 0, 0)
-, x188_spline(flags & 1)
+, x188_spline((flags & 1) != 0)
 , x1dc_lengthExtent(lengthExtent)
 , x1e0_filterMag(filterMag)
 , x1e4_filterProportion(filterProportion)
